@@ -6,8 +6,11 @@ import com.example.artgallery.model.viewmodel.ArtistViewModel;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.util.ResourceBundle;
+
 public class ArtistView extends VBox implements Observer {
     private final ArtistViewModel viewModel;
+    private final ResourceBundle bundle;
 
     private final TextField txtName = new TextField();
     private final DatePicker dpBirthDate = new DatePicker();
@@ -15,14 +18,15 @@ public class ArtistView extends VBox implements Observer {
     private final TextField txtNationality = new TextField();
     private final TextField txtSearch = new TextField();
 
-    private final Button btnAdd = new Button("Add");
-    private final Button btnUpdate = new Button("Update");
-    private final Button btnDelete = new Button("Delete");
+    private final Button btnAdd = new Button();
+    private final Button btnUpdate = new Button();
+    private final Button btnDelete = new Button();
 
     private final TableView<Artist> table = new TableView<>();
 
-    public ArtistView(ArtistViewModel viewModel) {
+    public ArtistView(ArtistViewModel viewModel, ResourceBundle bundle) {
         this.viewModel = viewModel;
+        this.bundle = bundle;
         this.viewModel.addObserver(this);
         setupUI();
         setupBindings();
@@ -30,22 +34,31 @@ public class ArtistView extends VBox implements Observer {
     }
 
     private void setupUI() {
-        txtName.setPromptText("Name");
-        txtBirthPlace.setPromptText("Birth Place");
-        txtNationality.setPromptText("Nationality");
-        txtSearch.setPromptText("Search by name...");
+        txtName.setPromptText(bundle.getString("label.name"));
+        txtBirthPlace.setPromptText(bundle.getString("label.birthPlace"));
+        txtNationality.setPromptText(bundle.getString("label.nationality"));
+        txtSearch.setPromptText(bundle.getString("label.searchByName"));
 
-        TableColumn<Artist, String> nameCol = new TableColumn<>("Name");
+        btnAdd.setText(bundle.getString("button.add"));
+        btnUpdate.setText(bundle.getString("button.update"));
+        btnDelete.setText(bundle.getString("button.delete"));
+
+        TableColumn<Artist, String> nameCol = new TableColumn<>(bundle.getString("label.name"));
         nameCol.setCellValueFactory(c -> c.getValue().nameProperty());
 
-        TableColumn<Artist, String> nationalityCol = new TableColumn<>("Nationality");
+        TableColumn<Artist, String> nationalityCol = new TableColumn<>(bundle.getString("label.nationality"));
         nationalityCol.setCellValueFactory(c -> c.getValue().nationalityProperty());
 
         table.getColumns().addAll(nameCol, nationalityCol);
 
         this.getChildren().addAll(
-                txtSearch, txtName, dpBirthDate, txtBirthPlace, txtNationality,
-                btnAdd, btnUpdate, btnDelete, table
+                new Label(bundle.getString("label.name")), txtName,
+                new Label(bundle.getString("label.birthDate")), dpBirthDate,
+                new Label(bundle.getString("label.birthPlace")), txtBirthPlace,
+                new Label(bundle.getString("label.nationality")), txtNationality,
+                txtSearch,
+                btnAdd, btnUpdate, btnDelete,
+                table
         );
     }
 

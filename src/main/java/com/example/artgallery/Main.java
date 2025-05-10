@@ -8,34 +8,59 @@ import com.example.artgallery.model.viewmodel.ArtistViewModel;
 import com.example.artgallery.model.viewmodel.ArtWorkViewModel;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 public class Main extends Application {
+
+    private ComboBox<String> languageSelector;
+
     @Override
     public void start(Stage stage) {
+        // initializează selectorul de limbă
+        languageSelector = new ComboBox<>();
+        languageSelector.getItems().addAll("en", "fr", "de", "ro");
+        languageSelector.setValue("en"); // default EN
+
+        languageSelector.setOnAction(e -> {
+            String lang = languageSelector.getValue();
+            loadUI(lang, stage);
+        });
+
+        loadUI("en", stage); // inițializare default
+    }
+
+    private void loadUI(String langCode, Stage stage) {
+        Locale locale = new Locale(langCode);
+        ResourceBundle bundle = ResourceBundle.getBundle("labels", locale);
+
         // Artist MVC
         ArtistViewModel artistVM = new ArtistViewModel();
-        ArtistView artistView = new ArtistView(artistVM);
+        ArtistView artistView = new ArtistView(artistVM, bundle);
         new ArtistController(artistVM, artistView);
 
         // ArtWork MVC
         ArtWorkViewModel artworkVM = new ArtWorkViewModel();
-        ArtWorkView artworkView = new ArtWorkView(artworkVM);
+        ArtWorkView artworkView = new ArtWorkView(artworkVM, bundle);
         new ArtWorkController(artworkVM, artworkView);
 
         // Tabs
         TabPane tabPane = new TabPane();
-        Tab artistTab = new Tab("Artists", artistView);
-        Tab artworkTab = new Tab("Artworks", artworkView);
+        Tab artistTab = new Tab(bundle.getString("label.name"), artistView);
+        Tab artworkTab = new Tab(bundle.getString("label.title"), artworkView);
         artistTab.setClosable(false);
         artworkTab.setClosable(false);
         tabPane.getTabs().addAll(artistTab, artworkTab);
 
-        Scene scene = new Scene(tabPane, 700, 500);
+        VBox root = new VBox(languageSelector, tabPane);
+
+        Scene scene = new Scene(root, 800, 600);
         stage.setScene(scene);
-        stage.setTitle("ArtGallery Manager");
+        stage.setTitle(bundle.getString("app.title"));
         stage.show();
     }
 

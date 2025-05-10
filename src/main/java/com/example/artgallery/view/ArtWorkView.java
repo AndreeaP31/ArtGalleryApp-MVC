@@ -6,8 +6,11 @@ import com.example.artgallery.model.viewmodel.ArtWorkViewModel;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.util.ResourceBundle;
+
 public class ArtWorkView extends VBox implements Observer {
     private final ArtWorkViewModel viewModel;
+    private final ResourceBundle bundle;
 
     private final TextField txtTitle = new TextField();
     private final TextField txtType = new TextField();
@@ -15,14 +18,15 @@ public class ArtWorkView extends VBox implements Observer {
     private final TextField txtArtistId = new TextField();
     private final TextField txtSearch = new TextField();
 
-    private final Button btnAdd = new Button("Add");
-    private final Button btnUpdate = new Button("Update");
-    private final Button btnDelete = new Button("Delete");
+    private final Button btnAdd = new Button();
+    private final Button btnUpdate = new Button();
+    private final Button btnDelete = new Button();
 
     private final TableView<ArtWork> table = new TableView<>();
 
-    public ArtWorkView(ArtWorkViewModel viewModel) {
+    public ArtWorkView(ArtWorkViewModel viewModel, ResourceBundle bundle) {
         this.viewModel = viewModel;
+        this.bundle = bundle;
         this.viewModel.addObserver(this);
         setupUI();
         setupBindings();
@@ -30,26 +34,35 @@ public class ArtWorkView extends VBox implements Observer {
     }
 
     private void setupUI() {
-        txtTitle.setPromptText("Title");
-        txtType.setPromptText("Type");
-        txtPrice.setPromptText("Price");
-        txtArtistId.setPromptText("Artist ID");
-        txtSearch.setPromptText("Search by title...");
+        txtTitle.setPromptText(bundle.getString("label.title"));
+        txtType.setPromptText(bundle.getString("label.type"));
+        txtPrice.setPromptText(bundle.getString("label.price"));
+        txtArtistId.setPromptText(bundle.getString("label.artistId"));
+        txtSearch.setPromptText(bundle.getString("label.searchByTitle"));
 
-        TableColumn<ArtWork, String> titleCol = new TableColumn<>("Title");
+        btnAdd.setText(bundle.getString("button.add"));
+        btnUpdate.setText(bundle.getString("button.update"));
+        btnDelete.setText(bundle.getString("button.delete"));
+
+        TableColumn<ArtWork, String> titleCol = new TableColumn<>(bundle.getString("label.title"));
         titleCol.setCellValueFactory(c -> c.getValue().titleProperty());
 
-        TableColumn<ArtWork, String> typeCol = new TableColumn<>("Type");
+        TableColumn<ArtWork, String> typeCol = new TableColumn<>(bundle.getString("label.type"));
         typeCol.setCellValueFactory(c -> c.getValue().typeProperty());
 
-        TableColumn<ArtWork, Number> priceCol = new TableColumn<>("Price");
+        TableColumn<ArtWork, Number> priceCol = new TableColumn<>(bundle.getString("label.price"));
         priceCol.setCellValueFactory(c -> c.getValue().priceProperty());
 
         table.getColumns().addAll(titleCol, typeCol, priceCol);
 
         this.getChildren().addAll(
-                txtSearch, txtTitle, txtType, txtPrice, txtArtistId,
-                btnAdd, btnUpdate, btnDelete, table
+                new Label(bundle.getString("label.title")), txtTitle,
+                new Label(bundle.getString("label.type")), txtType,
+                new Label(bundle.getString("label.price")), txtPrice,
+                new Label(bundle.getString("label.artistId")), txtArtistId,
+                txtSearch,
+                btnAdd, btnUpdate, btnDelete,
+                table
         );
     }
 
