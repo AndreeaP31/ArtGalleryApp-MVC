@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane fx:id="tabPane"
+         xmlns:fx="http://javafx.com/fxml"
+         fx:controller="com.example.artgallery.view.GalleryView">
+
+    <tabs>
+        <Tab text="Artiști">
+            <AnchorPane fx:id="artistTabContent"/>
+        </Tab>
+        <Tab text="Opere de Artă">
+            <AnchorPane fx:id="artworkTabContent"/>
+        </Tab>
+    </tabs>
+</TabPane>

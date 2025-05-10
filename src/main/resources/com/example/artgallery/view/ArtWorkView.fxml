@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.artgallery.view.ArtWorkView"
+            prefHeight="550.0" prefWidth="800.0">
+    <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10">
+        <HBox spacing="10">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Titlu:" />
+                <TextField fx:id="titleField" />
+
+                <Label text="Tip:" />
+                <TextField fx:id="typeField" />
+
+                <Label text="Preț:" />
+                <TextField fx:id="priceField" />
+
+                <Label text="ID Artist:" />
+                <TextField fx:id="artistIdField" />
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button fx:id="addButton" text="Adaugă" />
+                    <Button fx:id="updateButton" text="Actualizează" />
+                    <Button fx:id="deleteButton" text="Șterge" />
+                </HBox>
+
+                <Label fx:id="messageLabel" wrapText="true" />
+
+                <!-- Căutare după titlu -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Căutare după titlu:" />
+                    <TextField fx:id="searchTitleField" promptText="Căutare după titlu operă" />
+                    <Button fx:id="searchTitleButton" text="Căutare Titlu" />
+                </HBox>
+
+                <!-- Căutare după artist -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Căutare după artist:" />
+                    <TextField fx:id="searchArtistField" promptText="Căutare după nume artist" />
+                    <Button fx:id="searchArtistButton" text="Căutare Artist" />
+                </HBox>
+
+                <!-- Căutare după preț minim și maxim -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Preț minim:" />
+                    <TextField fx:id="minPriceField" promptText="Preț minim" />
+                    <Label text="Preț maxim:" />
+                    <TextField fx:id="maxPriceField" promptText="Preț maxim" />
+                    <Button fx:id="searchPriceButton" text="Filtrare după preț" />
+                </HBox>
+
+                <!-- ComboBox pentru selectarea tipului de operă -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Tip operă:" />
+                    <ComboBox fx:id="typeComboBox">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Painting" />
+                                <String fx:value="Sculpture" />
+                                <String fx:value="Photography" />
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                    <Button fx:id="searchTypeButton" text="Filtrare după tip" />
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button fx:id="saveCSVButton" text="Salvează CSV" />
+                    <Button fx:id="saveDocButton" text="Salvează DOC" />
+                </HBox>
+
+            </VBox>
+        </HBox>
+
+        <TableView fx:id="artworkTable" VBox.vgrow="ALWAYS" prefHeight="400.0">
+            <columns>
+                <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+                <TableColumn fx:id="titleColumn" text="Titlu" prefWidth="150" />
+                <TableColumn fx:id="typeColumn" text="Tip" prefWidth="100" />
+                <TableColumn fx:id="priceColumn" text="Preț" prefWidth="100" />
+                <TableColumn fx:id="artistIdColumn" text="ID Artist" prefWidth="100" />
+            </columns>
+        </TableView>
+
+    </VBox>
+</AnchorPane>

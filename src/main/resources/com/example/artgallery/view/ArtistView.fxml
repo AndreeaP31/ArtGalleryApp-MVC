@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.artgallery.view.ArtistView"
+            prefHeight="550.0" prefWidth="800.0">
+    <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10">
+        <HBox spacing="10">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Nume artist:" />
+                <TextField fx:id="nameField" /> <!-- Căutare după nume -->
+
+                <Label text="Data nașterii:" />
+                <DatePicker fx:id="birthDatePicker" />
+
+                <Label text="Locul nașterii:" />
+                <TextField fx:id="birthPlaceField" />
+
+                <Label text="Naționalitate:" />
+                <TextField fx:id="nationalityField" />
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button fx:id="addButton" text="Adaugă" />
+                    <Button fx:id="updateButton" text="Actualizează" />
+                    <Button fx:id="deleteButton" text="Șterge" />
+                </HBox>
+
+                <Label fx:id="messageLabel" wrapText="true" />
+
+                <!-- Caseta de căutare -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Căutare artist:" />
+                    <TextField fx:id="searchField" promptText="Căutare după nume" />
+                    <Button fx:id="searchButton" text="Căutare" />
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <TableView fx:id="artistTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+                <TableColumn fx:id="nameColumn" text="Nume" prefWidth="150" />
+                <TableColumn fx:id="birthDateColumn" text="Data nașterii" prefWidth="100" />
+                <TableColumn fx:id="birthPlaceColumn" text="Locul nașterii" prefWidth="150" />
+                <TableColumn fx:id="nationalityColumn" text="Naționalitate" prefWidth="100" />
+            </columns>
+        </TableView>
+    </VBox>
+</AnchorPane>
