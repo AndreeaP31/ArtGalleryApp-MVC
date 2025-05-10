@@ -3,9 +3,16 @@ package com.example.artgallery.view;
 import com.example.artgallery.model.ArtWork;
 import com.example.artgallery.model.observer.Observer;
 import com.example.artgallery.model.viewmodel.ArtWorkViewModel;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ArtWorkView extends VBox implements Observer {
@@ -21,6 +28,18 @@ public class ArtWorkView extends VBox implements Observer {
     private final Button btnAdd = new Button();
     private final Button btnUpdate = new Button();
     private final Button btnDelete = new Button();
+    private Button btnExportCSV = new Button("Export CSV");
+    private Button btnExportDOC = new Button("Export DOC");
+    private final Button btnShowStats = new Button("Show Statistics");
+
+    private final TextField txtFilterType = new TextField();
+    private final TextField txtFilterPriceMin = new TextField();
+    private final TextField txtFilterPriceMax = new TextField();
+    //private final TextField txtFilterArtist = new TextField();
+    private final TextField txtFilterArtistName = new TextField();
+
+    private final Button btnFilter = new Button("Filtrează");
+
 
     private final TableView<ArtWork> table = new TableView<>();
 
@@ -34,12 +53,17 @@ public class ArtWorkView extends VBox implements Observer {
     }
 
     private void setupUI() {
+
         txtTitle.setPromptText(bundle.getString("label.title"));
         txtType.setPromptText(bundle.getString("label.type"));
         txtPrice.setPromptText(bundle.getString("label.price"));
         txtArtistId.setPromptText(bundle.getString("label.artistId"));
         txtSearch.setPromptText(bundle.getString("label.searchByTitle"));
-
+        txtFilterType.setPromptText("Filtru: Tip");
+        txtFilterPriceMin.setPromptText("Preț minim");
+        txtFilterPriceMax.setPromptText("Preț maxim");
+        //txtFilterArtist.setPromptText("ID Artist");
+        txtFilterArtistName.setPromptText("Nume Artist");
         btnAdd.setText(bundle.getString("button.add"));
         btnUpdate.setText(bundle.getString("button.update"));
         btnDelete.setText(bundle.getString("button.delete"));
@@ -60,10 +84,35 @@ public class ArtWorkView extends VBox implements Observer {
                 new Label(bundle.getString("label.type")), txtType,
                 new Label(bundle.getString("label.price")), txtPrice,
                 new Label(bundle.getString("label.artistId")), txtArtistId,
+                new Label("Filtrare opere de artă:"),
+                txtFilterType, txtFilterPriceMin, txtFilterPriceMax,txtFilterArtistName,
+                //txtFilterArtist,
+                btnFilter,
                 txtSearch,
                 btnAdd, btnUpdate, btnDelete,
+                btnExportCSV, btnExportDOC,
+                btnShowStats,
                 table
         );
+    }
+
+    public void showStatistics(Map<String, Long> stats) {
+        Stage stage = new Stage();
+        stage.setTitle("Art Type Statistics");
+
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
+        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+        barChart.setTitle("Distribution of Art Types");
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        stats.forEach((type, count) -> series.getData().add(new XYChart.Data<>(type, count)));
+        barChart.getData().add(series);
+
+        VBox root = new VBox(barChart);
+        Scene scene = new Scene(root, 500, 400);
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void setupBindings() {
@@ -84,6 +133,31 @@ public class ArtWorkView extends VBox implements Observer {
     public Button getBtnAdd() {
         return btnAdd;
     }
+    public Button getBtnShowStats() {
+        return btnShowStats;
+    }
+    public Button getBtnFilter() {
+        return btnFilter;
+    }
+    public String getFilterType() {
+        return txtFilterType.getText();
+    }
+
+    public String getFilterPriceMin() {
+        return txtFilterPriceMin.getText();
+    }
+
+    public String getFilterPriceMax() {
+        return txtFilterPriceMax.getText();
+    }
+
+//    public String getFilterArtistId() {
+//        return txtFilterArtist.getText();
+//    }
+    public String getFilterArtistName() {
+        return txtFilterArtistName.getText();
+    }
+
 
     public Button getBtnUpdate() {
         return btnUpdate;
@@ -92,7 +166,13 @@ public class ArtWorkView extends VBox implements Observer {
     public Button getBtnDelete() {
         return btnDelete;
     }
+    public Button getBtnExportCSV() {
+        return btnExportCSV;
+    }
 
+    public Button getBtnExportDOC() {
+        return btnExportDOC;
+    }
     public ArtWork getArtWorkFromForm() {
         ArtWork art = new ArtWork();
         art.setTitle(txtTitle.getText());
