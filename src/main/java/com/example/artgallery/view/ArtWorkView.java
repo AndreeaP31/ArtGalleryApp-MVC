@@ -3,12 +3,16 @@ package com.example.artgallery.view;
 import com.example.artgallery.model.ArtWork;
 import com.example.artgallery.model.observer.Observer;
 import com.example.artgallery.model.viewmodel.ArtWorkViewModel;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -28,9 +32,9 @@ public class ArtWorkView extends VBox implements Observer {
     private final Button btnAdd = new Button();
     private final Button btnUpdate = new Button();
     private final Button btnDelete = new Button();
-    private Button btnExportCSV = new Button("Export CSV");
-    private Button btnExportDOC = new Button("Export DOC");
-    private final Button btnShowStats = new Button("Show Statistics");
+    private Button btnExportCSV = new Button();
+    private Button btnExportDOC = new Button();
+    private final Button btnShowStats = new Button();
 
     private final TextField txtFilterType = new TextField();
     private final TextField txtFilterPriceMin = new TextField();
@@ -38,8 +42,7 @@ public class ArtWorkView extends VBox implements Observer {
     //private final TextField txtFilterArtist = new TextField();
     private final TextField txtFilterArtistName = new TextField();
 
-    private final Button btnFilter = new Button("Filtrează");
-
+    private final Button btnFilter = new Button();
 
     private final TableView<ArtWork> table = new TableView<>();
 
@@ -53,57 +56,118 @@ public class ArtWorkView extends VBox implements Observer {
     }
 
     private void setupUI() {
+        // Configure main layout
+        this.setPadding(new Insets(15));
+        this.setSpacing(10);
 
+        // Create form grid for better alignment
+        GridPane formGrid = new GridPane();
+        formGrid.setHgap(10);
+        formGrid.setVgap(10);
+        formGrid.setPadding(new Insets(5));
+
+        // Configure form elements
         txtTitle.setPromptText(bundle.getString("label.title"));
         txtType.setPromptText(bundle.getString("label.type"));
         txtPrice.setPromptText(bundle.getString("label.price"));
         txtArtistId.setPromptText(bundle.getString("label.artistId"));
         txtSearch.setPromptText(bundle.getString("label.searchByTitle"));
-        txtFilterType.setPromptText("Filtru: Tip");
-        txtFilterPriceMin.setPromptText("Preț minim");
-        txtFilterPriceMax.setPromptText("Preț maxim");
-        //txtFilterArtist.setPromptText("ID Artist");
-        txtFilterArtistName.setPromptText("Nume Artist");
+
+        // Set up the form grid with labels and fields
+        formGrid.add(new Label(bundle.getString("label.title")), 0, 0);
+        formGrid.add(txtTitle, 1, 0);
+
+        formGrid.add(new Label(bundle.getString("label.type")), 0, 1);
+        formGrid.add(txtType, 1, 1);
+
+        formGrid.add(new Label(bundle.getString("label.price")), 0, 2);
+        formGrid.add(txtPrice, 1, 2);
+
+        formGrid.add(new Label(bundle.getString("label.artistId")), 0, 3);
+        formGrid.add(txtArtistId, 1, 3);
+
+        // Configure form elements to grow properly
+        GridPane.setHgrow(txtTitle, Priority.ALWAYS);
+        GridPane.setHgrow(txtType, Priority.ALWAYS);
+        GridPane.setHgrow(txtPrice, Priority.ALWAYS);
+        GridPane.setHgrow(txtArtistId, Priority.ALWAYS);
+
+        // Configure buttons
         btnAdd.setText(bundle.getString("button.add"));
         btnUpdate.setText(bundle.getString("button.update"));
         btnDelete.setText(bundle.getString("button.delete"));
+        btnExportCSV.setText(bundle.getString("button.exportCSV"));
+        btnExportDOC.setText(bundle.getString("button.exportDOC"));
+        btnShowStats.setText(bundle.getString("button.showStats"));
 
+        // Create button container for horizontal arrangement
+        HBox buttonBox = new HBox(10);
+        buttonBox.getChildren().addAll(btnAdd, btnUpdate, btnDelete, btnExportCSV, btnExportDOC, btnShowStats);
+
+        // Set up filter section
+        GridPane filterGrid = new GridPane();
+        filterGrid.setHgap(10);
+        filterGrid.setVgap(10);
+        filterGrid.setPadding(new Insets(5));
+
+        Label filterLabel = new Label(bundle.getString("label.filterTitle"));
+        filterLabel.getStyleClass().add("filter-title");
+
+        txtFilterType.setPromptText(bundle.getString("prompt.filterType"));
+        txtFilterPriceMin.setPromptText(bundle.getString("prompt.filterPriceMin"));
+        txtFilterPriceMax.setPromptText(bundle.getString("prompt.filterPriceMax"));
+        //txtFilterArtist.setPromptText(bundle.getString("prompt.filterArtistId"));
+        txtFilterArtistName.setPromptText(bundle.getString("prompt.filterArtistName"));
+        btnFilter.setText(bundle.getString("button.filter"));
+
+        filterGrid.add(txtFilterType, 0, 0);
+        filterGrid.add(txtFilterPriceMin, 1, 0);
+        filterGrid.add(txtFilterPriceMax, 2, 0);
+        filterGrid.add(txtFilterArtistName, 3, 0);
+        //filterGrid.add(txtFilterArtist, 4, 0);
+        filterGrid.add(btnFilter, 4, 0);
+
+        // Search section
+        HBox searchBox = new HBox(10);
+        HBox.setHgrow(txtSearch, Priority.ALWAYS);
+        searchBox.getChildren().add(txtSearch);
+
+        // Configure table columns
         TableColumn<ArtWork, String> titleCol = new TableColumn<>(bundle.getString("label.title"));
         titleCol.setCellValueFactory(c -> c.getValue().titleProperty());
+        titleCol.setPrefWidth(200);
 
         TableColumn<ArtWork, String> typeCol = new TableColumn<>(bundle.getString("label.type"));
         typeCol.setCellValueFactory(c -> c.getValue().typeProperty());
+        typeCol.setPrefWidth(150);
 
         TableColumn<ArtWork, Number> priceCol = new TableColumn<>(bundle.getString("label.price"));
         priceCol.setCellValueFactory(c -> c.getValue().priceProperty());
+        priceCol.setPrefWidth(100);
 
         table.getColumns().addAll(titleCol, typeCol, priceCol);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        VBox.setVgrow(table, Priority.ALWAYS);
 
+        // Add all components to main layout
         this.getChildren().addAll(
-                new Label(bundle.getString("label.title")), txtTitle,
-                new Label(bundle.getString("label.type")), txtType,
-                new Label(bundle.getString("label.price")), txtPrice,
-                new Label(bundle.getString("label.artistId")), txtArtistId,
-                new Label("Filtrare opere de artă:"),
-                txtFilterType, txtFilterPriceMin, txtFilterPriceMax,txtFilterArtistName,
-                //txtFilterArtist,
-                btnFilter,
-                txtSearch,
-                btnAdd, btnUpdate, btnDelete,
-                btnExportCSV, btnExportDOC,
-                btnShowStats,
+                formGrid,
+                buttonBox,
+                filterLabel,
+                filterGrid,
+                searchBox,
                 table
         );
     }
 
     public void showStatistics(Map<String, Long> stats) {
         Stage stage = new Stage();
-        stage.setTitle("Art Type Statistics");
+        stage.setTitle(bundle.getString("window.statsTitle"));
 
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-        barChart.setTitle("Distribution of Art Types");
+        barChart.setTitle(bundle.getString("chart.artTypeDistribution"));
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         stats.forEach((type, count) -> series.getData().add(new XYChart.Data<>(type, count)));
@@ -133,12 +197,15 @@ public class ArtWorkView extends VBox implements Observer {
     public Button getBtnAdd() {
         return btnAdd;
     }
+
     public Button getBtnShowStats() {
         return btnShowStats;
     }
+
     public Button getBtnFilter() {
         return btnFilter;
     }
+
     public String getFilterType() {
         return txtFilterType.getText();
     }
@@ -154,10 +221,10 @@ public class ArtWorkView extends VBox implements Observer {
 //    public String getFilterArtistId() {
 //        return txtFilterArtist.getText();
 //    }
+
     public String getFilterArtistName() {
         return txtFilterArtistName.getText();
     }
-
 
     public Button getBtnUpdate() {
         return btnUpdate;
@@ -166,6 +233,7 @@ public class ArtWorkView extends VBox implements Observer {
     public Button getBtnDelete() {
         return btnDelete;
     }
+
     public Button getBtnExportCSV() {
         return btnExportCSV;
     }
@@ -173,6 +241,7 @@ public class ArtWorkView extends VBox implements Observer {
     public Button getBtnExportDOC() {
         return btnExportDOC;
     }
+
     public ArtWork getArtWorkFromForm() {
         ArtWork art = new ArtWork();
         art.setTitle(txtTitle.getText());
